@@ -19,19 +19,19 @@ dependencies {
 
 ```
 HIndicatorDialog dialog = new HIndicatorBuilder(this)
-                .width(200)   // the dialog width in px
-                .height(-1)  // the dialog max height in px or -1 (means auto fit)
-                .ArrowDirection(HIndicatorBuilder.TOP)  // the  position of dialog's arrow indicator  (TOP or BOTTOM)
-                .bgColor(Color.parseColor("#999898"))  // the bg color of the dialog
-                .gravity(HIndicatorBuilder.GRAVITY_LEFT)   // dialog' sgravity (GRAVITY_LEFT or GRAVITY_RIGHT or GRAVITY_CENTER)
-                .radius(8) // the radius in dialog
-                .ArrowRectage(0.2f)  // the arrow's offset Relative to the dialog's width
+                .width(200)  
+                .height(-1)  
+                .ArrowDirection(HIndicatorBuilder.TOP)  
+                .bgColor(Color.parseColor("#999898"))  
+                .gravity(HIndicatorBuilder.GRAVITY_LEFT)   
+                .radius(8) 
+                .ArrowRectage(0.2f)  
                 .layoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false))
                 .dimEnabled(false)
                 .adapter(new MyAdapter())
                 .create();
-        dialog.setCanceledOnTouchOutside(true); // outside cancelable
-        dialog.show(spinner); // or use dialog.show(x,y); to determine the location of dialog
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show(spinner);
         
 public class MyAdapter extends BaseHIndicatorAdapter {
         @Override
