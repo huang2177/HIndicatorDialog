@@ -7,9 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.TextView;
 
-import com.huangbryant.mylibrary.BaseHIndicatorAdapter;
-import com.huangbryant.mylibrary.HIndicatorBuilder;
-import com.huangbryant.mylibrary.HIndicatorDialog;
+import com.huangbryant.hindicator.HIndicatorAdapter;
+import com.huangbryant.hindicator.HIndicatorBuilder;
+import com.huangbryant.hindicator.HIndicatorDialog;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public class MyAdapter extends BaseHIndicatorAdapter {
+    public class MyAdapter extends HIndicatorAdapter {
         @Override
         public void onBindView(BaseViewHolder holder, int position) {
             TextView tv = holder.getView(R.id.item_tv);
             tv.setText(mList.get(position));
-            tv.setCompoundDrawablesWithIntrinsicBounds(mICons.get(position), 0, 0, 0);
+           // tv.setCompoundDrawablesWithIntrinsicBounds(mICons.get(position), 0, 0, 0);
 
             if (position == mList.size() - 1) {
                 holder.setVisibility(R.id.item_line, BaseViewHolder.GONE);
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getLayoutID(int position) {
-            return R.layout.hindicator_item_layout;
+            return com.huangbryant.hindicator.R.layout.hindicator_item_layout;
         }
 
         @Override

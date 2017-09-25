@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-          package="com.huangbryant.mylibrary"
+          package="com.huangbryant.hindicator"
 >
 
     <application android:allowBackup="true"

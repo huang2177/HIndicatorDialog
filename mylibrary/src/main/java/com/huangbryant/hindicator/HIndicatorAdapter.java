@@ -1,4 +1,4 @@
-package com.huangbryant.mylibrary;
+package com.huangbryant.hindicator;
 
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
@@ -18,7 +18,7 @@ import java.lang.annotation.RetentionPolicy;
  * 事件 16/8/29.
  * 邮箱： 15378412400@163.com
  */
-public abstract class BaseHIndicatorAdapter extends RecyclerView.Adapter<BaseHIndicatorAdapter.BaseViewHolder> {
+public abstract class HIndicatorAdapter extends RecyclerView.Adapter<HIndicatorAdapter.BaseViewHolder> {
 
 
     @Override

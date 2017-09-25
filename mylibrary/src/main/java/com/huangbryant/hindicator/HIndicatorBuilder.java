@@ -1,4 +1,4 @@
-package com.huangbryant.mylibrary;
+package com.huangbryant.hindicator;
 
 import android.app.Activity;
 import android.graphics.Color;

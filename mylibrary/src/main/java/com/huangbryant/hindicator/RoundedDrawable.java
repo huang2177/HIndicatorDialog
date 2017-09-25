@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.huangbryant.mylibrary;
+package com.huangbryant.hindicator;
 
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;

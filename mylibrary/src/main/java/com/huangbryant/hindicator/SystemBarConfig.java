@@ -1,4 +1,4 @@
-package com.huangbryant.mylibrary;
+package com.huangbryant.hindicator;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

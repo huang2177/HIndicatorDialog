@@ -1,7 +1,8 @@
-package com.huangbryant.mylibrary;
+package com.huangbryant.hindicator;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
@@ -324,6 +325,15 @@ public class HIndicatorDialog {
         if (mDialog != null) {
             mDialog.dismiss();
         }
+    }
+
+    public void setOnDismissListener(final OnDismissListener onDismissListener){
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                onDismissListener.onDismiss(mDialog);
+            }
+        });
     }
 
     public Dialog getDialog() {

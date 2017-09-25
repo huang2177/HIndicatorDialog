@@ -1,4 +1,4 @@
-package com.huangbryant.mylibrary;
+package com.huangbryant.hindicator;
 
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
