@@ -39,6 +39,7 @@ public class HIndicatorBuilder {
     protected int animator;
     protected BaseDrawable mArrowDrawable;
     protected boolean dimEnabled = true;
+    protected float alpha = 0.5f;
 
     public HIndicatorBuilder(Activity context) {
         this.mContext = context;
@@ -90,7 +91,6 @@ public class HIndicatorBuilder {
         }
         this.radius = radius;
         return this;
-
     }
 
     /**
@@ -164,6 +164,17 @@ public class HIndicatorBuilder {
      */
     public HIndicatorBuilder dimEnabled(boolean enable) {
         this.dimEnabled = enable;
+        return this;
+    }
+
+    /**
+     * //设置背景透明度，0~1.0  默认0.5
+     *
+     * @param alpha 默认0.5
+     * @return
+     */
+    public HIndicatorBuilder dimAmount(float alpha) {
+        this.alpha = alpha;
         return this;
     }
 

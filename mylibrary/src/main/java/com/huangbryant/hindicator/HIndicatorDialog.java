@@ -60,13 +60,13 @@ public class HIndicatorDialog {
         } else {
             this.mArrowWidth = mBuilder.mArrowWidth;
         }
-
         initDialog();
     }
 
     private void initDialog() {
         if (mBuilder.dimEnabled) {
             mDialog = new Dialog(mContext, R.style.H_DIalog_Style_Dim_enable);
+            mDialog.getWindow().setDimAmount(mBuilder.alpha);
         } else {
             mDialog = new Dialog(mContext, R.style.H_DIalog_Style_Dim_disable);
         }
@@ -261,10 +261,7 @@ public class HIndicatorDialog {
             }
 
         }
-
-
         show(view, x, y);
-
     }
 
 
@@ -300,11 +297,8 @@ public class HIndicatorDialog {
     }
 
     public void show(int x, int y) {
-
         recyclerView.setLayoutManager(mBuilder.mLayoutManager);
         recyclerView.setAdapter(mBuilder.mAdapter);
-
-
         setDialogPosition(x, y);
         mDialog.show();
     }
@@ -327,11 +321,13 @@ public class HIndicatorDialog {
         }
     }
 
-    public void setOnDismissListener(final OnDismissListener onDismissListener){
+    public void setOnDismissListener(final OnDismissListener onDismissListener) {
         mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                onDismissListener.onDismiss(mDialog);
+                if (onDismissListener != null) {
+                    onDismissListener.onDismiss(mDialog);
+                }
             }
         });
     }
