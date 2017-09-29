@@ -11,7 +11,7 @@ allprojects {
 - 2.0 将下面代码添加到app目录的build.gradle： 
 ```
 dependencies { 
-     compile 'com.github.huangbryant210707:HIndicatorDialog:2.0.0'
+     compile 'com.github.huangbryant210707:HIndicatorDialog:2.2.0'
 }
 ```
 
