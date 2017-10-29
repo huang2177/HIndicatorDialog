@@ -106,6 +106,7 @@ public class HIndicatorDialog {
 
         mCardView.setCardBackgroundColor(mBuilder.bgColor);
         mCardView.setRadius(mBuilder.radius);
+        mCardView.setCardElevation(mBuilder.cardElevation);
         recyclerView = (RecyclerView) childLayout.findViewById(R.id.h_dialog_rv);
         CardView.LayoutParams layoutParams = (CardView.LayoutParams) recyclerView.getLayoutParams();
         int width = mBuilder.width;

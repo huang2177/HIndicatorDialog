@@ -40,6 +40,7 @@ public class HIndicatorBuilder {
     protected BaseDrawable mArrowDrawable;
     protected boolean dimEnabled = true;
     protected float alpha = 0.5f;
+    protected float cardElevation = 0f;
 
     public HIndicatorBuilder(Activity context) {
         this.mContext = context;
@@ -175,6 +176,17 @@ public class HIndicatorBuilder {
      */
     public HIndicatorBuilder dimAmount(float alpha) {
         this.alpha = alpha;
+        return this;
+    }
+
+    /**
+     * //设置背景透明度，0~1.0  默认0
+     *
+     * @param cardElevation 默认0
+     * @return
+     */
+    public HIndicatorBuilder cardElevation(float cardElevation) {
+        this.cardElevation = cardElevation;
         return this;
     }
 
