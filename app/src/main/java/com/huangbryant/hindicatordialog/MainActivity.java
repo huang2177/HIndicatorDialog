@@ -1,14 +1,11 @@
 package com.huangbryant.hindicatordialog;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
-import com.huangbryant.hindicator.base.BaseIndicatorAdapter;
 import com.huangbryant.hindicator.HIndicatorBuilder;
 import com.huangbryant.hindicator.HIndicatorDialog;
 import com.huangbryant.hindicator.listener.OnItemClickListener;
