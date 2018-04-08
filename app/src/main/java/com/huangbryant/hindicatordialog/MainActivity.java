@@ -11,13 +11,23 @@ import com.huangbryant.hindicator.HIndicatorAdapter;
 import com.huangbryant.hindicator.HIndicatorBuilder;
 import com.huangbryant.hindicator.HIndicatorDialog;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private List<String> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mList = Arrays.asList("Java", "C", "C++");
 
+
+    }
+
+    public void showDialog(View view) {
         HIndicatorDialog dialog = new HIndicatorBuilder(this)
                 .width(200)   // the dialog width in px
                 .height(-1)  // the dialog max height in px or -1 (means auto fit)
@@ -31,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 .adapter(new MyAdapter())
                 .create();
         dialog.setCanceledOnTouchOutside(true); // outside cancelable
-        dialog.show(spinner); // or use dialog.show(x,y); to determine the location of dialog
+        dialog.show(view); // or use dialog.show(x,y); to determine the location of dialog
     }
 
 
@@ -40,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         public void onBindView(BaseViewHolder holder, int position) {
             TextView tv = holder.getView(R.id.item_tv);
             tv.setText(mList.get(position));
-           // tv.setCompoundDrawablesWithIntrinsicBounds(mICons.get(position), 0, 0, 0);
+            // tv.setCompoundDrawablesWithIntrinsicBounds(mICons.get(position), 0, 0, 0);
 
             if (position == mList.size() - 1) {
                 holder.setVisibility(R.id.item_line, BaseViewHolder.GONE);
