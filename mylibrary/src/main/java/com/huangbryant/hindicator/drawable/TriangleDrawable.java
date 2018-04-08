@@ -1,4 +1,4 @@
-package com.huangbryant.hindicator;
+package com.huangbryant.hindicator.drawable;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,6 +9,8 @@ import android.graphics.Rect;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.huangbryant.hindicator.HIndicatorBuilder;
 
 /**
  * 作者:huangshuang

@@ -7,8 +7,13 @@ import android.support.annotation.StyleRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.huangbryant.hindicator.drawable.BaseDrawable;
+import com.huangbryant.hindicator.listener.OnDismissListener;
+import com.huangbryant.hindicator.listener.OnItemClickListener;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 /**
  * 作者:huangshuang
@@ -25,22 +30,32 @@ public class HIndicatorBuilder {
     public static final int GRAVITY_LEFT = 688;
     public static final int GRAVITY_RIGHT = 689;
     public static final int GRAVITY_CENTER = 670;
+
     protected int width;
     protected int height;
     protected int radius = 8;
     protected int bgColor = Color.WHITE;
     protected int mArrowWidth;
-    protected float arrowercentage; //箭头位置
+    /**
+     * 箭头的位置
+     */
+    protected float arrowPercentage;
     protected int arrowdirection = TOP;
-    private Activity mContext;
     protected RecyclerView.LayoutManager mLayoutManager;
     protected RecyclerView.Adapter mAdapter;
     protected int gravity = GRAVITY_LEFT;
     protected int animator;
     protected BaseDrawable mArrowDrawable;
-    protected boolean dimEnabled = true;
-    protected float alpha = 0.5f;
+    protected float alpha = 0f;
     protected float cardElevation = 0f;
+    protected OnDismissListener mOnDismissListener;
+    protected boolean enableTouchOutside;
+    private Activity mContext;
+    /**
+     * 提供默认的数据类型，若是需要其他的数据类型，则需要实现BaseIndicatorAdapter自己实现
+     */
+    private List<String> mData;
+    private OnItemClickListener mClickListener;
 
     public HIndicatorBuilder(Activity context) {
         this.mContext = context;
@@ -137,11 +152,11 @@ public class HIndicatorBuilder {
      * @param rectage
      * @return
      */
-    public HIndicatorBuilder ArrowRectage(float rectage) {
+    public HIndicatorBuilder arrowRectage(float rectage) {
         if (rectage > 1 || rectage < 0) {
             new Exception("rectage must be 0 <= rectage <= 1");
         }
-        this.arrowercentage = rectage;
+        this.arrowPercentage = rectage;
         return this;
     }
 
@@ -151,22 +166,11 @@ public class HIndicatorBuilder {
      * @param direction
      * @return
      */
-    public HIndicatorBuilder ArrowDirection(@ARROWDIRECTION int direction) {
+    public HIndicatorBuilder arrowDirection(@ARROWDIRECTION int direction) {
         this.arrowdirection = direction;
         return this;
     }
 
-
-    /**
-     * 背景模糊效果，默认true
-     *
-     * @param enable 默认true
-     * @return
-     */
-    public HIndicatorBuilder dimEnabled(boolean enable) {
-        this.dimEnabled = enable;
-        return this;
-    }
 
     /**
      * //设置背景透明度，0~1.0  默认0.5
@@ -205,22 +209,42 @@ public class HIndicatorBuilder {
         return this;
     }
 
+    public HIndicatorBuilder enableTouchOutside(boolean enableTouchOutside) {
+        this.enableTouchOutside = enableTouchOutside;
+        return this;
+    }
+
+    public HIndicatorBuilder data(List<String> list) {
+        this.mData = list;
+        return this;
+    }
+
+    public HIndicatorBuilder clickListener(OnItemClickListener listener) {
+        this.mClickListener = listener;
+        return this;
+    }
+
+    public HIndicatorBuilder onDisMissListener(OnDismissListener listener) {
+        this.mOnDismissListener = listener;
+        return this;
+    }
+
     public HIndicatorDialog create() {
-
-        if (width <= 0)
+        if (width <= 0) {
             throw new NullPointerException("width can not be 0");
+        }
 
-        if (arrowercentage < 0)
-            throw new NullPointerException("arrowercentage can not < 0");
+        if (arrowPercentage < 0) {
+            throw new NullPointerException("arrowPercentage can not < 0");
+        }
 
-
-        if (mAdapter == null)
-            throw new NullPointerException("adapter can not be null");
+        if (mAdapter == null) {
+            mAdapter = new HIndicatorAdapter(mData, mContext, mClickListener);
+        }
 
         if (mLayoutManager == null) {
             mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         }
-
         return HIndicatorDialog.newInstance(mContext, this);
     }
 

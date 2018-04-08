@@ -1,4 +1,4 @@
-package com.huangbryant.hindicator;
+package com.huangbryant.hindicator.listener;
 
 import android.app.Dialog;
 
@@ -9,5 +9,10 @@ import android.app.Dialog;
  */
 
 public interface OnDismissListener {
+    /**
+     * dialog消失的监听
+     *
+     * @param dialog
+     */
     void onDismiss(Dialog dialog);
 }

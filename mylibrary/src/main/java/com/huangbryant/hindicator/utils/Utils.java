@@ -1,4 +1,4 @@
-package com.huangbryant.hindicator;
+package com.huangbryant.hindicator.utils;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,6 +1,8 @@
-package com.huangbryant.hindicator;
+package com.huangbryant.hindicator.drawable;
 
 import android.graphics.drawable.Drawable;
+
+import com.huangbryant.hindicator.HIndicatorBuilder;
 
 
 public abstract class BaseDrawable extends Drawable {

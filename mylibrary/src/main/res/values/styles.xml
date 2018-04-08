@@ -11,11 +11,11 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="H_DIalog_Style_Dim_enable" parent="H_Dialog_Style">
+    <style name="H_Dialog_Style_Dim_enable" parent="H_Dialog_Style">
         <item name="android:backgroundDimEnabled">true</item><!--模糊-->
     </style>
 
-    <style name="H_DIalog_Style_Dim_disable" parent="H_Dialog_Style">
+    <style name="H_Dialog_Style_Dim_disable" parent="H_Dialog_Style">
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
     </style>
 </resources>

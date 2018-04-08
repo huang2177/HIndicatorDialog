@@ -1,152 +1,60 @@
 package com.huangbryant.hindicator;
 
-import android.graphics.drawable.Drawable;
-import android.support.annotation.IdRes;
-import android.support.annotation.IntDef;
-import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
-import android.view.LayoutInflater;
+import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.huangbryant.hindicator.base.BaseIndicatorAdapter;
+import com.huangbryant.hindicator.base.BaseViewHolder;
+import com.huangbryant.hindicator.listener.OnItemClickListener;
+
+import java.util.List;
 
 /**
- * 作者:huangshuang
- * 事件 16/8/29.
- * 邮箱： 15378412400@163.com
+ * @author Huangshuang  2018/4/8 0008
+ * @describtion 提供默认的数据类型，若是需要其他的数据类型，则需要实现BaseIndicatorAdapter自己实现
  */
-public abstract class HIndicatorAdapter extends RecyclerView.Adapter<HIndicatorAdapter.BaseViewHolder> {
 
+public class HIndicatorAdapter extends BaseIndicatorAdapter {
 
-    @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
+    private List<String> list;
+    private Context context;
+    private OnItemClickListener listener;
+
+    public HIndicatorAdapter(List<String> list, Context context, OnItemClickListener listener) {
+        this.list = list;
+        this.context = context;
+        this.listener = listener;
     }
 
     @Override
-    public void onBindViewHolder(final BaseViewHolder holder, final int position) {
-
-
-        if (clickable()) {
-            holder.getConvertView().setClickable(true);
-            holder.getConvertView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClick(v, position);
-                }
-            });
-        }
-
-        onBindView(holder, holder.getLayoutPosition());
-
+    public int getLayoutID(int position) {
+        return R.layout.hindicator_item_layout;
     }
-
-    public abstract void onBindView(BaseViewHolder holder, int position);
 
     @Override
-    public int getItemViewType(int position) {
-        return getLayoutID(position);
-    }
-
-
-    public abstract int getLayoutID(int position);
-
-    public abstract boolean clickable();
-
     public void onItemClick(View v, int position) {
+        if (listener != null) {
+            listener.OnItemClick(position);
+        }
     }
 
+    @Override
+    public void onBindView(BaseViewHolder holder, int position) {
+        TextView tv = holder.getView(R.id.item_tv);
+        tv.setText(list.get(position));
 
-    public static class BaseViewHolder extends RecyclerView.ViewHolder {
-
-        protected final SparseArray<View> mViews;
-        protected View mConvertView;
-
-
-        public BaseViewHolder(View itemView) {
-            super(itemView);
-            mViews = new SparseArray<>();
-            mConvertView = itemView;
+        //使用该方法来实现item分割线
+        if (position == list.size() - 1) {
+            holder.setVisibility(R.id.item_line, BaseViewHolder.GONE);
+        } else {
+            holder.setVisibility(R.id.item_line, BaseViewHolder.VISIBLE);
         }
-
-
-        /**
-         * 通过控件的Id获取对应的控件，如果没有则加入mViews，则从item根控件中查找并保存到mViews中
-         *
-         * @param viewId
-         * @return
-         */
-        public <T extends View> T getView(@IdRes int viewId) {
-            View view = mViews.get(viewId);
-            if (view == null) {
-                view = mConvertView.findViewById(viewId);
-                mViews.put(viewId, view);
-            }
-            return (T) view;
-        }
-
-        public View getConvertView() {
-            return mConvertView;
-        }
-
-        public BaseViewHolder setBgColor(@IdRes int resID, int color) {
-            getView(resID).setBackgroundColor(color);
-            return this;
-        }
-
-        public BaseViewHolder setBgDrawable(@IdRes int resID, Drawable drawable) {
-            getView(resID).setBackground(drawable);
-            return this;
-
-        }
-
-        public BaseViewHolder setText(@IdRes int resID, String text) {
-            ((TextView) getView(resID)).setText(text);
-            return this;
-        }
-
-        public BaseViewHolder setTextSize(@IdRes int resID, int spSize) {
-            ((TextView) getView(resID)).setTextSize(spSize);
-            return this;
-        }
-
-        public BaseViewHolder setVisibility(@IdRes int resID, @Visibility int visibility) {
-            switch (visibility) {
-                case VISIBLE:
-                    getView(resID).setVisibility(View.VISIBLE);
-                    break;
-                case INVISIBLE:
-                    getView(resID).setVisibility(View.INVISIBLE);
-                    break;
-                case GONE:
-                    getView(resID).setVisibility(View.GONE);
-                    break;
-
-            }
-            return this;
-
-        }
-
-        public BaseViewHolder setTextColor(int id, int textColor) {
-            ((TextView) getView(id)).setTextColor(textColor);
-            return this;
-        }
-
-
-        @IntDef({VISIBLE, INVISIBLE, GONE})
-        @Retention(RetentionPolicy.SOURCE)
-        public @interface Visibility {
-        }
-
-        public static final int VISIBLE = 0x00000000;
-        public static final int INVISIBLE = 0x00000004;
-
-        public static final int GONE = 0x00000008;
-
 
     }
 
+    @Override
+    public int getItemCount() {
+        return list != null ? list.size() : 0;
+    }
 }

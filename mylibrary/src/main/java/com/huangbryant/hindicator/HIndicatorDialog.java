@@ -16,6 +16,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.huangbryant.hindicator.drawable.BaseDrawable;
+import com.huangbryant.hindicator.drawable.TriangleDrawable;
+import com.huangbryant.hindicator.listener.OnDismissListener;
+import com.huangbryant.hindicator.utils.Utils;
+
 /**
  * 作者:huangshuang
  * 事件 2017/5/18.
@@ -24,6 +29,7 @@ import android.widget.LinearLayout;
 
 public class HIndicatorDialog {
 
+    private static final String TAG = "HIndicatorDialog";
     public static float ARROW_RECTAGE = 0.1f;
     int gravity = Gravity.TOP | Gravity.LEFT;
     /**
@@ -38,18 +44,12 @@ public class HIndicatorDialog {
     private View mArrow;
     private CardView mCardView;
     private View mShowView;
-
     /**
      * 变量
      */
     private int mArrowWidth;
     private int mWidth;
     private int mResultHeight;
-
-    public static HIndicatorDialog newInstance(Activity context, HIndicatorBuilder builder) {
-        HIndicatorDialog dialog = new HIndicatorDialog(context, builder);
-        return dialog;
-    }
 
 
     public HIndicatorDialog(Activity context, HIndicatorBuilder builder) {
@@ -64,12 +64,12 @@ public class HIndicatorDialog {
     }
 
     private void initDialog() {
-        if (mBuilder.dimEnabled) {
-            mDialog = new Dialog(mContext, R.style.H_DIalog_Style_Dim_enable);
+        mDialog = new Dialog(mContext, R.style.H_Dialog_Style_Dim_enable);
+
+        if (mDialog.getWindow() != null) {
             mDialog.getWindow().setDimAmount(mBuilder.alpha);
-        } else {
-            mDialog = new Dialog(mContext, R.style.H_DIalog_Style_Dim_disable);
         }
+
         rootLayout = new LinearLayout(mContext);
         if (mBuilder.arrowdirection == HIndicatorBuilder.TOP || mBuilder.arrowdirection == HIndicatorBuilder.BOTTOM) {
             rootLayout.setOrientation(LinearLayout.VERTICAL);
@@ -81,8 +81,9 @@ public class HIndicatorDialog {
         ViewGroup.LayoutParams rootParam = new ViewGroup.LayoutParams(mWidth,
                 mBuilder.height <= 0 ? ViewGroup.LayoutParams.WRAP_CONTENT : mBuilder.height);
         rootLayout.setLayoutParams(rootParam);
-        if (mBuilder.arrowdirection == HIndicatorBuilder.TOP || mBuilder.arrowdirection == HIndicatorBuilder.LEFT)
+        if (mBuilder.arrowdirection == HIndicatorBuilder.TOP || mBuilder.arrowdirection == HIndicatorBuilder.LEFT) {
             addArrow2LinearLayout();
+        }
 
         addRecyclerView2Layout();
 
@@ -94,8 +95,27 @@ public class HIndicatorDialog {
 
         setSize2Dialog(mBuilder.height);
 
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+                if (mBuilder.mOnDismissListener != null) {
+                    mBuilder.mOnDismissListener.onDismiss(mDialog);
+                }
+            }
+        });
+
+        mDialog.setCanceledOnTouchOutside(mBuilder.enableTouchOutside);
     }
 
+    private void addArrow2LinearLayout() {
+        mArrow = new View(mContext);
+        rootLayout.addView(mArrow);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mArrow.getLayoutParams();
+        layoutParams.width = mArrowWidth;
+        layoutParams.height = mArrowWidth;
+        mArrow.setLayoutParams(layoutParams);
+    }
 
     /**
      * modify recyclerview state
@@ -131,6 +151,25 @@ public class HIndicatorDialog {
 
     }
 
+    private void setSize2Dialog(int height) {
+        Window dialogWindow = mDialog.getWindow();
+        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
+        if (mBuilder.animator != 0) {
+            dialogWindow.setWindowAnimations(mBuilder.animator);
+        }
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        if (mBuilder.gravity == HIndicatorBuilder.GRAVITY_RIGHT) {
+            gravity = Gravity.RIGHT | (mBuilder.arrowdirection != HIndicatorBuilder.BOTTOM ? Gravity.TOP : Gravity.BOTTOM);
+        } else if (mBuilder.gravity == HIndicatorBuilder.GRAVITY_LEFT) {
+            gravity = Gravity.LEFT | (mBuilder.arrowdirection != HIndicatorBuilder.BOTTOM ? Gravity.TOP : Gravity.BOTTOM);
+        } else {
+            gravity = Gravity.CENTER_HORIZONTAL | (mBuilder.arrowdirection != HIndicatorBuilder.BOTTOM ? Gravity.TOP : Gravity.BOTTOM);
+        }
+        dialogWindow.setGravity(gravity);
+        lp.width = mBuilder.width; // 宽度
+        lp.height = height; // 高度
+        dialogWindow.setAttributes(lp);
+    }
 
     private void resizeHeight(int recyclerviewHeight) {
 
@@ -183,15 +222,15 @@ public class HIndicatorDialog {
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mArrow.getLayoutParams();
         if (mBuilder.arrowdirection == HIndicatorBuilder.TOP) {
-            layoutParams.leftMargin = (int) (mBuilder.width * mBuilder.arrowercentage) - mArrowWidth / 2;
+            layoutParams.leftMargin = (int) (mBuilder.width * mBuilder.arrowPercentage) - mArrowWidth / 2;
         } else if (mBuilder.arrowdirection == HIndicatorBuilder.BOTTOM) {
-            layoutParams.leftMargin = (int) (mBuilder.width * mBuilder.arrowercentage) - mArrowWidth / 2;
+            layoutParams.leftMargin = (int) (mBuilder.width * mBuilder.arrowPercentage) - mArrowWidth / 2;
         } else {
-            layoutParams.topMargin = (int) (mResultHeight * mBuilder.arrowercentage) - mArrowWidth / 2;
+            layoutParams.topMargin = (int) (mResultHeight * mBuilder.arrowPercentage) - mArrowWidth / 2;
             Window dialogWindow = mDialog.getWindow();
             dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.y = lp.y - ((int) (mResultHeight * mBuilder.arrowercentage));
+            lp.y = lp.y - ((int) (mResultHeight * mBuilder.arrowPercentage));
             dialogWindow.setAttributes(lp);
         }
         mArrow.setLayoutParams(layoutParams);
@@ -208,41 +247,10 @@ public class HIndicatorDialog {
 
     }
 
-
-    private void addArrow2LinearLayout() {
-        mArrow = new View(mContext);
-        rootLayout.addView(mArrow);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mArrow.getLayoutParams();
-        layoutParams.width = mArrowWidth;
-        layoutParams.height = mArrowWidth;
-        mArrow.setLayoutParams(layoutParams);
+    public static HIndicatorDialog newInstance(Activity context, HIndicatorBuilder builder) {
+        HIndicatorDialog dialog = new HIndicatorDialog(context, builder);
+        return dialog;
     }
-
-    private void setSize2Dialog(int height) {
-        Window dialogWindow = mDialog.getWindow();
-        dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
-        if (mBuilder.animator != 0) {
-            dialogWindow.setWindowAnimations(mBuilder.animator);
-        }
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        if (mBuilder.gravity == HIndicatorBuilder.GRAVITY_RIGHT) {
-            gravity = Gravity.RIGHT | (mBuilder.arrowdirection != HIndicatorBuilder.BOTTOM ? Gravity.TOP : Gravity.BOTTOM);
-        } else if (mBuilder.gravity == HIndicatorBuilder.GRAVITY_LEFT) {
-            gravity = Gravity.LEFT | (mBuilder.arrowdirection != HIndicatorBuilder.BOTTOM ? Gravity.TOP : Gravity.BOTTOM);
-        } else {
-            gravity = Gravity.CENTER_HORIZONTAL | (mBuilder.arrowdirection != HIndicatorBuilder.BOTTOM ? Gravity.TOP : Gravity.BOTTOM);
-        }
-        dialogWindow.setGravity(gravity);
-        lp.width = mBuilder.width; // 宽度
-        lp.height = height; // 高度
-        dialogWindow.setAttributes(lp);
-    }
-
-    public HIndicatorDialog setCanceledOnTouchOutside(boolean cancel) {
-        mDialog.setCanceledOnTouchOutside(cancel);
-        return this;
-    }
-
 
     public void show(View view) {
         mShowView = view;
@@ -250,9 +258,9 @@ public class HIndicatorDialog {
         int y = 0;
         if (mBuilder.arrowdirection == HIndicatorBuilder.TOP || mBuilder.arrowdirection == HIndicatorBuilder.BOTTOM) {
             if (mBuilder.gravity == HIndicatorBuilder.GRAVITY_LEFT) {
-                x = -1 * (int) (mBuilder.width * mBuilder.arrowercentage) + view.getWidth() / 2;
+                x = -1 * (int) (mBuilder.width * mBuilder.arrowPercentage) + view.getWidth() / 2;
             } else if (mBuilder.gravity == HIndicatorBuilder.GRAVITY_RIGHT) {
-                x = -1 * (mBuilder.width - (int) (mBuilder.width * mBuilder.arrowercentage)) + view.getWidth() / 2;
+                x = -1 * (mBuilder.width - (int) (mBuilder.width * mBuilder.arrowPercentage)) + view.getWidth() / 2;
             }
         } else {
             if (mBuilder.gravity == HIndicatorBuilder.GRAVITY_LEFT) {
@@ -264,7 +272,6 @@ public class HIndicatorDialog {
         }
         show(view, x, y);
     }
-
 
     public void show(View view, int xOffset, int yOffset) {
         int[] location = new int[2];
@@ -282,7 +289,9 @@ public class HIndicatorDialog {
             x = 0;
         }
         x += xOffset;
-        if (x < 0) x = 0;
+        if (x < 0) {
+            x = 0;
+        }
         if (mBuilder.arrowdirection == HIndicatorBuilder.BOTTOM) {
             y = height - location[1] + Utils.getNavigationBarHeight(mContext) - mArrowWidth / 2;
         } else if (mBuilder.arrowdirection == HIndicatorBuilder.TOP) {
@@ -291,7 +300,9 @@ public class HIndicatorDialog {
             y = location[1] + view.getHeight() / 2;
         }
         y += yOffset;
-        if (y < 0) y = 0;
+        if (y < 0) {
+            y = 0;
+        }
 
         show(x, y);
 
@@ -303,8 +314,6 @@ public class HIndicatorDialog {
         setDialogPosition(x, y);
         mDialog.show();
     }
-
-    private static final String TAG = "HIndicatorDialog";
 
     private void setDialogPosition(int x, int y) {
         Window dialogWindow = mDialog.getWindow();
@@ -320,17 +329,6 @@ public class HIndicatorDialog {
         if (mDialog != null) {
             mDialog.dismiss();
         }
-    }
-
-    public void setOnDismissListener(final OnDismissListener onDismissListener) {
-        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if (onDismissListener != null) {
-                    onDismissListener.onDismiss(mDialog);
-                }
-            }
-        });
     }
 
     public Dialog getDialog() {

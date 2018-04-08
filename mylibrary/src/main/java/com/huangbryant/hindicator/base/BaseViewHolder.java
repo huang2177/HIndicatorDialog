@@ -1,8 +1,10 @@
-package com.huangbryant.hindicator;
+package com.huangbryant.hindicator.base;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntDef;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
@@ -19,9 +21,11 @@ import java.lang.annotation.RetentionPolicy;
 
 public class BaseViewHolder extends RecyclerView.ViewHolder {
 
+    public static final int VISIBLE = 0x00000000;
+    public static final int INVISIBLE = 0x00000004;
+    public static final int GONE = 0x00000008;
     protected final SparseArray<View> mViews;
     protected View mConvertView;
-
 
     public BaseViewHolder(View itemView) {
         super(itemView);
@@ -29,6 +33,14 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         mConvertView = itemView;
     }
 
+    public View getConvertView() {
+        return mConvertView;
+    }
+
+    public BaseViewHolder setBgColor(@IdRes int resID, int color) {
+        getView(resID).setBackgroundColor(color);
+        return this;
+    }
 
     /**
      * 通过控件的Id获取对应的控件，如果没有则加入mViews，则从item根控件中查找并保存到mViews中
@@ -45,15 +57,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return (T) view;
     }
 
-    public View getConvertView() {
-        return mConvertView;
-    }
-
-    public BaseViewHolder setBgColor(@IdRes int resID, int color) {
-        getView(resID).setBackgroundColor(color);
-        return this;
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public BaseViewHolder setBgDrawable(@IdRes int resID, Drawable drawable) {
         getView(resID).setBackground(drawable);
         return this;
@@ -81,6 +85,8 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
             case GONE:
                 getView(resID).setVisibility(View.GONE);
                 break;
+            default:
+                break;
 
         }
         return this;
@@ -92,16 +98,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-
     @IntDef({VISIBLE, INVISIBLE, GONE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Visibility {
     }
-
-    public static final int VISIBLE = 0x00000000;
-    public static final int INVISIBLE = 0x00000004;
-
-    public static final int GONE = 0x00000008;
 
 
 }
