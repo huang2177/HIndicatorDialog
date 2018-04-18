@@ -16,6 +16,29 @@ dependencies {
 ```
 
 # 使用 
+- 1.0 默认的使用方法（使用默认的Adpater） 
+```
+dialog = new HIndicatorBuilder(this)
+                .width(200)  
+                .height(-1)  
+                .arrowDirection(HIndicatorBuilder.TOP)  
+                .bgColor(Color.parseColor("#999898"))  
+                .gravity(HIndicatorBuilder.GRAVITY_LEFT)  
+                .radius(8) 
+                .arrowRectage(0.2f)  
+                .data(mList)
+                .clickListener(this)
+                .enableTouchOutside(false)
+                .create();
+        dialog.show(view); 
+        
+ @Override
+    public void OnItemClick(int position) {
+        dialog.dismiss();
+        Log.e("----", mList.get(position));
+    }
+```
+- 2.0 自定义Adpater 
 
 ```
 HIndicatorDialog dialog = new HIndicatorBuilder(this)
